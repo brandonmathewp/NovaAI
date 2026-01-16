@@ -153,6 +153,40 @@
             </div>
         </main>
 
+        <!-- Debug Panel (hidden by default) -->
+<div id="debug-panel" style="display: none; position: fixed; bottom: 60px; right: 20px; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 5px; z-index: 9999; max-width: 300px;">
+    <h4 style="margin: 0 0 10px 0;">Debug Info</h4>
+    <div id="debug-content" style="font-size: 12px; font-family: monospace;"></div>
+    <button onclick="document.getElementById('debug-panel').style.display='none'" style="margin-top: 10px;">Close</button>
+</div>
+
+<button onclick="toggleDebug()" style="position: fixed; bottom: 20px; right: 20px; background: #666; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index: 9998;">D</button>
+
+<script>
+function toggleDebug() {
+    const panel = document.getElementById('debug-panel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    
+    if (panel.style.display === 'block') {
+        updateDebugInfo();
+    }
+}
+
+function updateDebugInfo() {
+    const debugContent = document.getElementById('debug-content');
+    const auth = window.auth;
+    
+    let html = `<strong>Auth Status:</strong> ${auth ? (auth.isAuthenticated() ? 'Authenticated' : 'Not Authenticated') : 'N/A'}<br>`;
+    html += `<strong>API Key:</strong> ${auth && auth.apiKey ? auth.apiKey.substring(0, 10) + '...' : 'None'}<br>`;
+    html += `<strong>Balance:</strong> ${auth && auth.balance !== null ? auth.balance : 'N/A'}<br>`;
+    html += `<strong>LocalStorage Key:</strong> ${localStorage.getItem('pollinations_api_key') ? 'Present' : 'None'}<br>`;
+    html += `<strong>URL Hash:</strong> ${window.location.hash || 'None'}<br>`;
+    html += `<strong>Current URL:</strong> ${window.location.href}<br>`;
+    
+    debugContent.innerHTML = html;
+}
+                                                        </script>
+
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
