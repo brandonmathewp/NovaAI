@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Companion</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-robot"></i> AI Companion</h1>
+                <div class="api-status">
+                    <span id="auth-status" class="auth-badge offline">Not Connected</span>
+                    <span id="balance" class="balance-badge">Balance: --</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="auth-btn" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Connect Account
+                </button>
+                <button id="personas-btn" class="btn btn-secondary">
+                    <i class="fas fa-users"></i> Personas
+                </button>
+                <button id="memory-btn" class="btn btn-secondary">
+                    <i class="fas fa-brain"></i> Memory
+                </button>
+                <button id="models-btn" class="btn btn-secondary">
+                    <i class="fas fa-microchip"></i> Models
+                </button>
+                <button id="billing-btn" class="btn btn-secondary">
+                    <i class="fas fa-chart-bar"></i> Usage
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="current-persona">
+                        <span id="current-ai-persona">No AI Persona Selected</span>
+                        <span class="separator">→</span>
+                        <span id="current-user-persona">No User Persona Selected</span>
+                    </div>
+                    <div class="chat-actions">
+                        <button id="clear-chat" class="btn btn-small btn-danger">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button id="export-chat" class="btn btn-small btn-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="chat-messages" class="chat-messages">
+                    <div class="welcome-message">
+                        <i class="fas fa-comments"></i>
+                        <h3>Welcome to AI Companion</h3>
+                        <p>Connect your Pollinations.ai account to start chatting</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="input-actions">
+                        <button id="image-mode-btn" class="btn btn-small" title="Toggle Image Mode">
+                            <i class="fas fa-image"></i>
+                        </button>
+                        <button id="enhance-prompt-btn" class="btn btn-small" title="Enhance Prompt">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                        </button>
+                        <button id="attach-file-btn" class="btn btn-small" title="Attach File">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                    </div>
+                    <div class="message-input-wrapper">
+                        <textarea 
+                            id="message-input" 
+                            placeholder="Type your message here... (Shift+Enter for new line, Enter to send)"
+                            rows="1"
+                        ></textarea>
+                        <div class="input-buttons">
+                            <button id="send-btn" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                    <div class="image-input-container" id="image-input-container" style="display: none;">
+                        <input type="text" id="image-prompt" placeholder="Describe the image you want to generate...">
+                        <div class="image-options">
+                            <select id="image-model">
+                                <option value="">Loading models...</option>
+                            </select>
+                            <button id="generate-image-btn" class="btn btn-primary">
+                                <i class="fas fa-bolt"></i> Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-user-circle"></i> User Personas</h3>
+                    <div id="user-personas-list" class="personas-list">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                    <button id="add-user-persona" class="btn btn-small btn-block">
+                        <i class="fas fa-plus"></i> Add User Persona
+                    </button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-robot"></i> AI Personas</h3>
+                    <div id="ai-personas-list" class="personas-list">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                    <button id="add-ai-persona" class="btn btn-small btn-block">
+                        <i class="fas fa-plus"></i> Add AI Persona
+                    </button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cog"></i> Settings</h3>
+                    <div class="settings-group">
+                        <label>Model:</label>
+                        <select id="model-select">
+                            <option value="">Loading models...</option>
+                        </select>
+                    </div>
+                    <div class="settings-group">
+                        <label>Temperature:</label>
+                        <input type="range" id="temperature" min="0" max="2" step="0.1" value="1">
+                        <span id="temp-value">1.0</span>
+                    </div>
+                    <div class="settings-group">
+                        <label>Max Tokens:</label>
+                        <input type="number" id="max-tokens" min="100" max="32000" value="2000">
+                    </div>
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="streaming" checked>
+                            Streaming
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span>&copy; 2024 AI Companion. All rights reserved.</span>
+                    <a href="terms-of-service.html" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                </div>
+                <div class="footer-right">
+                    <span id="token-count">Tokens: 0</span>
+                    <span id="message-count">Messages: 0</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div id="persona-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-edit"></i> Edit Persona</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="persona-type">
+                        <option value="user">User Persona</option>
+                        <option value="ai">AI Persona</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="persona-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="persona-age" min="1" max="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <input type="text" id="persona-gender" placeholder="e.g., Female, Male, Non-binary">
+                </div>
+                <div class="form-group">
+                    <label>Backstory</label>
+                    <textarea id="persona-backstory" rows="3" 
+                              placeholder="Describe the persona's background, personality, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Physical Description</label>
+                    <textarea id="persona-physical" rows="2" 
+                              placeholder="Describe appearance, clothing style, etc."></textarea>
+                </div>
+                <div class="form-group ai-only">
+                    <label>Response Directive</label>
+                    <textarea id="persona-directive" rows="3" 
+                              placeholder="How should this AI respond? (e.g., 'Be helpful and concise', 'Roleplay as a character')"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="delete-persona" class="btn btn-danger" style="display: none;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button id="cancel-persona" class="btn btn-secondary">Cancel</button>
+                <button id="save-persona" class="btn btn-primary">Save Persona</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="memory-modal" class="modal">
+        <div class="modal-content wide-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-brain"></i> Memory System</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="memory-tabs">
+                    <button class="tab-btn active" data-tab="stm">Short-Term Memory</button>
+                    <button class="tab-btn" data-tab="ltm">Long-Term Memory</button>
+                    <button class="tab-btn" data-tab="keywords">Keywords</button>
+                </div>
+                
+                <div id="stm-tab" class="tab-content active">
+                    <div class="memory-actions">
+                        <button id="add-stm" class="btn btn-small">
+                            <i class="fas fa-plus"></i> Add Memory
+                        </button>
+                    </div>
+                    <div id="stm-list" class="memory-list">
+                        <!-- Short-term memories will be loaded here -->
+                    </div>
+                </div>
+                
+                <div id="ltm-tab" class="tab-content">
+                    <div class="memory-actions">
+                        <button id="add-ltm" class="btn btn-small">
+                            <i class="fas fa-plus"></i> Add Memory
+                        </button>
+                        <input type="text" id="ltm-search" placeholder="Search memories...">
+                    </div>
+                    <div id="ltm-list" class="memory-list">
+                        <!-- Long-term memories will be loaded here -->
+                    </div>
+                </div>
+                
+                <div id="keywords-tab" class="tab-content">
+                    <div class="keywords-container">
+                        <div class="keywords-list" id="keywords-list">
+                            <!-- Keywords will be loaded here -->
+                        </div>
+                        <div class="keyword-form">
+                            <input type="text" id="new-keyword" placeholder="Add new keyword">
+                            <button id="add-keyword" class="btn btn-small">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="models-modal" class="modal">
+        <div class="modal-content wide-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-microchip"></i> Available Models</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="model-tabs">
+                    <button class="tab-btn active" data-tab="text-models">Text Models</button>
+                    <button class="tab-btn" data-tab="image-models">Image Models</button>
+                    <button class="tab-btn" data-tab="pricing">Pricing</button>
+                </div>
+                
+                <div id="text-models-tab" class="tab-content active">
+                    <div id="text-models-list" class="models-list">
+                        <!-- Text models will be loaded here -->
+                    </div>
+                </div>
+                
+                <div id="image-models-tab" class="tab-content">
+                    <div id="image-models-list" class="models-list">
+                        <!-- Image models will be loaded here -->
+                    </div>
+                </div>
+                
+                <div id="pricing-tab" class="tab-content">
+                    <div id="pricing-info">
+                        <!-- Pricing information will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="billing-modal" class="modal">
+        <div class="modal-content wide-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-bar"></i> Usage & Billing</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="billing-stats">
+                    <div class="stat-card">
+                        <h4>Current Balance</h4>
+                        <div class="stat-value" id="current-balance">--</div>
+                        <div class="stat-label">Pollen</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Today's Cost</h4>
+                        <div class="stat-value" id="today-cost">--</div>
+                        <div class="stat-label">USD</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Monthly Cost</h4>
+                        <div class="stat-value" id="monthly-cost">--</div>
+                        <div class="stat-label">USD</div>
+                    </div>
+                </div>
+                
+                <div class="usage-table-container">
+                    <h4>Recent Usage</h4>
+                    <table class="usage-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Model</th>
+                                <th>Type</th>
+                                <th>Tokens</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usage-table-body">
+                            <!-- Usage data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Actions Menu -->
+    <div id="message-menu" class="context-menu">
+        <ul>
+            <li data-action="edit"><i class="fas fa-edit"></i> Edit Message</li>
+            <li data-action="regenerate"><i class="fas fa-redo"></i> Regenerate</li>
+            <li data-action="delete"><i class="fas fa-trash"></i> Delete</li>
+            <li data-action="copy"><i class="fas fa-copy"></i> Copy Text</li>
+        </ul>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="utils.js"></script>
+    <script src="markdown-renderer.js"></script>
+    <script src="auth.js"></script>
+    <script src="personas.js"></script>
+    <script src="memory.js"></script>
+    <script src="models.js"></script>
+    <script src="billing.js"></script>
+    <script src="image.js"></script>
+    <script src="chat.js"></script>
+    <script src="app.js"></script>
+</body>
+  </html>
