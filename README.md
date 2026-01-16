@@ -1,5 +1,3 @@
-### NOVA AI
-
 ## Usage Guide
 
 ### Getting Started
