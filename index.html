@@ -10,7 +10,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header class="header">
             <div class="header-left">
                 <h1><i class="fas fa-robot"></i> AI Companion</h1>
@@ -38,9 +37,7 @@
             </div>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Chat Container -->
             <div class="chat-container">
                 <div class="chat-header">
                     <div class="current-persona">
@@ -104,13 +101,11 @@
                 </div>
             </div>
 
-            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="sidebar-section">
                     <h3><i class="fas fa-user-circle"></i> User Personas</h3>
                     <div id="user-personas-list" class="personas-list">
-                        <!-- Filled by JavaScript -->
-                    </div>
+                        </div>
                     <button id="add-user-persona" class="btn btn-small btn-block">
                         <i class="fas fa-plus"></i> Add User Persona
                     </button>
@@ -119,8 +114,7 @@
                 <div class="sidebar-section">
                     <h3><i class="fas fa-robot"></i> AI Personas</h3>
                     <div id="ai-personas-list" class="personas-list">
-                        <!-- Filled by JavaScript -->
-                    </div>
+                        </div>
                     <button id="add-ai-persona" class="btn btn-small btn-block">
                         <i class="fas fa-plus"></i> Add AI Persona
                     </button>
@@ -153,41 +147,39 @@
             </div>
         </main>
 
-        <!-- Debug Panel (hidden by default) -->
-<div id="debug-panel" style="display: none; position: fixed; bottom: 60px; right: 20px; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 5px; z-index: 9999; max-width: 300px;">
-    <h4 style="margin: 0 0 10px 0;">Debug Info</h4>
-    <div id="debug-content" style="font-size: 12px; font-family: monospace;"></div>
-    <button onclick="document.getElementById('debug-panel').style.display='none'" style="margin-top: 10px;">Close</button>
-</div>
+        <div id="debug-panel" style="display: none; position: fixed; bottom: 60px; right: 20px; background: rgba(0,0,0,0.9); color: white; padding: 10px; border-radius: 5px; z-index: 9999; max-width: 300px;">
+            <h4 style="margin: 0 0 10px 0;">Debug Info</h4>
+            <div id="debug-content" style="font-size: 12px; font-family: monospace;"></div>
+            <button onclick="document.getElementById('debug-panel').style.display='none'" style="margin-top: 10px;">Close</button>
+        </div>
 
-<button onclick="toggleDebug()" style="position: fixed; bottom: 20px; right: 20px; background: #666; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index: 9998;">D</button>
+        <button onclick="toggleDebug()" style="position: fixed; bottom: 20px; right: 20px; background: #666; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; z-index: 9998;">D</button>
 
-<script>
-function toggleDebug() {
-    const panel = document.getElementById('debug-panel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    
-    if (panel.style.display === 'block') {
-        updateDebugInfo();
-    }
-}
+        <script>
+            function toggleDebug() {
+                const panel = document.getElementById('debug-panel');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                
+                if (panel.style.display === 'block') {
+                    updateDebugInfo();
+                }
+            }
 
-function updateDebugInfo() {
-    const debugContent = document.getElementById('debug-content');
-    const auth = window.auth;
-    
-    let html = `<strong>Auth Status:</strong> ${auth ? (auth.isAuthenticated() ? 'Authenticated' : 'Not Authenticated') : 'N/A'}<br>`;
-    html += `<strong>API Key:</strong> ${auth && auth.apiKey ? auth.apiKey.substring(0, 10) + '...' : 'None'}<br>`;
-    html += `<strong>Balance:</strong> ${auth && auth.balance !== null ? auth.balance : 'N/A'}<br>`;
-    html += `<strong>LocalStorage Key:</strong> ${localStorage.getItem('pollinations_api_key') ? 'Present' : 'None'}<br>`;
-    html += `<strong>URL Hash:</strong> ${window.location.hash || 'None'}<br>`;
-    html += `<strong>Current URL:</strong> ${window.location.href}<br>`;
-    
-    debugContent.innerHTML = html;
-}
-                                                        </script>
+            function updateDebugInfo() {
+                const debugContent = document.getElementById('debug-content');
+                const auth = window.auth;
+                
+                let html = `<strong>Auth Status:</strong> ${auth ? (auth.isAuthenticated() ? 'Authenticated' : 'Not Authenticated') : 'N/A'}<br>`;
+                html += `<strong>API Key:</strong> ${auth && auth.apiKey ? auth.apiKey.substring(0, 10) + '...' : 'None'}<br>`;
+                html += `<strong>Balance:</strong> ${auth && auth.balance !== null ? auth.balance : 'N/A'}<br>`;
+                html += `<strong>LocalStorage Key:</strong> ${localStorage.getItem('pollinations_api_key') ? 'Present' : 'None'}<br>`;
+                html += `<strong>URL Hash:</strong> ${window.location.hash || 'None'}<br>`;
+                html += `<strong>Current URL:</strong> ${window.location.href}<br>`;
+                
+                debugContent.innerHTML = html;
+            }
+        </script>
 
-        <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-left">
@@ -203,7 +195,6 @@ function updateDebugInfo() {
         </footer>
     </div>
 
-    <!-- Modals -->
     <div id="persona-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -278,8 +269,7 @@ function updateDebugInfo() {
                         </button>
                     </div>
                     <div id="stm-list" class="memory-list">
-                        <!-- Short-term memories will be loaded here -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div id="ltm-tab" class="tab-content">
@@ -290,15 +280,13 @@ function updateDebugInfo() {
                         <input type="text" id="ltm-search" placeholder="Search memories...">
                     </div>
                     <div id="ltm-list" class="memory-list">
-                        <!-- Long-term memories will be loaded here -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div id="keywords-tab" class="tab-content">
                     <div class="keywords-container">
                         <div class="keywords-list" id="keywords-list">
-                            <!-- Keywords will be loaded here -->
-                        </div>
+                            </div>
                         <div class="keyword-form">
                             <input type="text" id="new-keyword" placeholder="Add new keyword">
                             <button id="add-keyword" class="btn btn-small">
@@ -326,20 +314,17 @@ function updateDebugInfo() {
                 
                 <div id="text-models-tab" class="tab-content active">
                     <div id="text-models-list" class="models-list">
-                        <!-- Text models will be loaded here -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div id="image-models-tab" class="tab-content">
                     <div id="image-models-list" class="models-list">
-                        <!-- Image models will be loaded here -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div id="pricing-tab" class="tab-content">
                     <div id="pricing-info">
-                        <!-- Pricing information will be loaded here -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -383,15 +368,13 @@ function updateDebugInfo() {
                             </tr>
                         </thead>
                         <tbody id="usage-table-body">
-                            <!-- Usage data will be loaded here -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Message Actions Menu -->
     <div id="message-menu" class="context-menu">
         <ul>
             <li data-action="edit"><i class="fas fa-edit"></i> Edit Message</li>
@@ -401,7 +384,6 @@ function updateDebugInfo() {
         </ul>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="utils.js"></script>
@@ -415,4 +397,4 @@ function updateDebugInfo() {
     <script src="chat.js"></script>
     <script src="app.js"></script>
 </body>
-  </html>
+</html>
