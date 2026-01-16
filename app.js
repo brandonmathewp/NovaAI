@@ -11,42 +11,40 @@ class AICompanionApp {
         this.init();
     }
     
+    // 在 app.js 的 init 方法中，修改这部分：
     async init() {
         // Initialize all modules
         this.initEventListeners();
-        
+    
         // Load data from localStorage
         await this.loadData();
-        
-        // Initialize auth
+    
+        // Initialize auth - this will automatically check URL for BYOP key
         window.auth = new AuthManager();
         window.auth.onAuthChange = this.handleAuthChange.bind(this);
-        
+    
         // Initialize personas
         window.personas = new PersonaManager();
-        
+    
         // Initialize memory
         window.memory = new MemoryManager();
-        
+    
         // Initialize chat
         window.chat = new ChatManager();
-        
+    
         // Initialize models
         window.models = new ModelManager();
-        
+    
         // Initialize billing
         window.billing = new BillingManager();
-        
+    
         // Initialize image generation
         window.imageGen = new ImageGenerator();
-        
-        // Check for API key in URL (BYOP redirect)
-        this.checkForApiKeyInUrl();
-        
+    
         // Update UI
         this.updateUI();
     }
-    
+
     async loadData() {
         try {
             // Load personas
@@ -65,7 +63,7 @@ class AICompanionApp {
             }
         } catch (error) {
             console.error('Error loading data:', error);
-            this.showToast('Error loading saved data', 'error');
+            owToast('Error loading saved data', 'error');
         }
     }
     
@@ -261,13 +259,15 @@ class AICompanionApp {
         textarea.style.height = 'auto';
         textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
     }
-    
+
     checkForApiKeyInUrl() {
+        // This is now handled by auth.js, but we keep it as backup
         const hash = window.location.hash.slice(1);
         const params = new URLSearchParams(hash);
         const apiKey = params.get('api_key');
-        
-        if (apiKey) {
+    
+        if (apiKey && !window.auth.isAuthenticated()) {
+            console.log('Backup: Found API key in URL, passing to auth');
             window.auth.handleBYOPRedirect(apiKey);
             // Clear the hash from URL
             window.history.replaceState(null, '', window.location.pathname + window.location.search);
